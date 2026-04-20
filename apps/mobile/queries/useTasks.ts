@@ -28,15 +28,21 @@ export function useTasks(): UseQueryResult<TasksPage> {
     refetchOnReconnect: true,
   });
 
-  useEffect(() => {
-    if (query.isFetching) setSyncStatus('syncing');
-    else if (query.isError) setSyncStatus('error', query.error?.message ?? 'sync_failed');
-    else if (query.isSuccess) setSyncStatus('synced');
-  }, [query.isFetching, query.isError, query.isSuccess, query.error, setSyncStatus]);
+  const { status, fetchStatus, data, error } = query;
 
   useEffect(() => {
-    if (query.data) setTasks(query.data.tasks);
-  }, [query.data, setTasks]);
+    if (fetchStatus === 'fetching') {
+      setSyncStatus('syncing');
+    } else if (status === 'error') {
+      setSyncStatus('error', error instanceof Error ? error.message : 'sync_failed');
+    } else if (status === 'success') {
+      setSyncStatus('synced');
+    }
+  }, [status, fetchStatus, error, setSyncStatus]);
+
+  useEffect(() => {
+    if (data?.tasks) setTasks(data.tasks);
+  }, [data, setTasks]);
 
   useEffect(() => {
     const onChange = (state: AppStateStatus) => {

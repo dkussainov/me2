@@ -5,10 +5,12 @@
     "version": "0.1.0",
     "scheme": "me2",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "bundleIdentifier": "com.me2.app",
       "supportsTablet": true,
@@ -20,11 +22,9 @@
     },
     "android": {
       "package": "com.me2.app",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#09090b"
-      },
-      "permissions": ["RECORD_AUDIO"]
+      "permissions": [
+        "RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro"
@@ -33,12 +33,7 @@
       "expo-router",
       "expo-secure-store",
       "expo-sqlite",
-      [
-        "expo-speech",
-        {
-          "microphonePermission": "PADA needs the microphone to capture voice tasks."
-        }
-      ]
+      "@sentry/react-native"
     ],
     "experiments": {
       "typedRoutes": true

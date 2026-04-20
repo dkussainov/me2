@@ -24,7 +24,7 @@ PADA is a personal AI delegation assistant. Users capture tasks (work, personal,
 | AI | Vercel AI SDK 4.x + `@ai-sdk/anthropic` — model: `claude-sonnet-4-20250514` |
 | Auth | Auth.js v5 (NextAuth) — Apple Sign In primary |
 | Server DB | Neon Postgres + Drizzle ORM |
-| Mobile | Expo SDK 52 + React Native 0.76 (New Architecture) |
+| Mobile | Expo SDK 54 + React Native 0.81 + React 19 (New Architecture) |
 | Mobile DB | expo-sqlite — offline-first |
 | Sync | CloudKit Private Database (custom Expo Module) |
 | Mac | Swift + AppKit (~500 lines) — NSStatusItem + NSPopover + WKWebView |
@@ -569,5 +569,5 @@ xcodebuild archive -project PADAMenuBar.xcodeproj ...
 
 ---
 
-*Last updated: April 2026 — v2.0 Hybrid Stack*
+*Last updated: April 2026 — v2.1 Hybrid Stack (mobile bumped to Expo SDK 54 / RN 0.81 / React 19)*
 *Companion docs: PRD v2, AC v2, Technical Architecture v2, Data Model v2, Stack Decision v1, Sprint Plan Phase 1*

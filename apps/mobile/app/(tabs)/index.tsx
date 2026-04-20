@@ -3,6 +3,7 @@ import { FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useShallow } from 'zustand/react/shallow';
 import type { Task } from '@me2/types';
 import { priorityColors, priorityLabels } from '@/constants/tokens';
 import { selectVisibleTasks, useTaskStore } from '@/stores/taskStore';
@@ -131,7 +132,7 @@ function EmptyState() {
 
 export default function InboxScreen() {
   const router = useRouter();
-  const visibleTasks = useTaskStore(selectVisibleTasks);
+  const visibleTasks = useTaskStore(useShallow(selectVisibleTasks));
   const hydrateFromLocal = useTaskStore((s) => s.hydrateFromLocal);
   const syncStatus = useTaskStore((s) => s.syncStatus);
   const [refreshing, setRefreshing] = useState(false);
