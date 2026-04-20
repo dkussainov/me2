@@ -1,14 +1,17 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useRouter } from 'expo-router';
 import type { CreateTaskInput, Task, TaskParseOutput } from '@me2/types';
 import { priorityColors } from '@/constants/tokens';
@@ -159,70 +162,78 @@ export default function CaptureScreen() {
     }
   }, [input, preview, saving, addTask, parseMutation, router]);
 
+  const headerHeight = useHeaderHeight();
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? headerHeight : 0;
+
   return (
     <SafeAreaView edges={['top']} className="flex-1 bg-zinc-950">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={keyboardVerticalOffset}
         className="flex-1"
       >
-        <View className="px-4 py-3">
-          <Text className="text-2xl font-bold text-white">Capture</Text>
-          <Text className="mt-1 text-sm text-zinc-400">
-            Describe the task. AI will extract due date, priority, and category.
-          </Text>
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View className="flex-1">
+            <View className="px-4 py-3">
+              <Text className="text-2xl font-bold text-white">Capture</Text>
+              <Text className="mt-1 text-sm text-zinc-400">
+                Describe the task. AI will extract due date, priority, and category.
+              </Text>
+            </View>
 
-        <View className="flex-1 px-4">
-          <TextInput
-            value={input}
-            onChangeText={setInput}
-            placeholder="e.g. Remind me to call the dentist tomorrow at 4pm"
-            placeholderTextColor="#71717a"
-            multiline
-            textAlignVertical="top"
-            maxLength={5000}
-            className="min-h-[120px] rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-base text-white"
-          />
+            <View className="flex-1 px-4">
+              <TextInput
+                value={input}
+                onChangeText={setInput}
+                placeholder="e.g. Remind me to call the dentist tomorrow at 4pm"
+                placeholderTextColor="#71717a"
+                multiline
+                textAlignVertical="top"
+                maxLength={5000}
+                className="min-h-[120px] rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-base text-white"
+              />
 
-          {preview && <ParsedPreview preview={preview} />}
-          {parseMutation.isError && (
-            <Text className="mt-3 text-sm text-red-400">
-              Parse failed: {parseMutation.error?.message ?? 'unknown_error'}
-            </Text>
-          )}
-          {error && <Text className="mt-3 text-sm text-red-400">{error}</Text>}
-        </View>
+              {preview && <ParsedPreview preview={preview} />}
+              {parseMutation.isError && (
+                <Text className="mt-3 text-sm text-red-400">
+                  Parse failed: {parseMutation.error?.message ?? 'unknown_error'}
+                </Text>
+              )}
+              {error && <Text className="mt-3 text-sm text-red-400">{error}</Text>}
+            </View>
 
-        <View className="flex-row items-center gap-3 border-t border-zinc-900 bg-zinc-950 px-4 py-3">
-          <Pressable
-            onPress={handleParse}
-            disabled={!canParse}
-            className={`flex-1 items-center rounded-lg border border-zinc-700 px-4 py-3 ${
-              canParse ? '' : 'opacity-40'
-            }`}
-          >
-            {isParsing ? (
-              <ActivityIndicator color="#ffffff" />
-            ) : (
-              <Text className="text-sm font-medium text-white">Parse with AI</Text>
-            )}
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              void handleSave();
-            }}
-            disabled={!canSave}
-            className={`flex-1 items-center rounded-lg bg-blue-500 px-4 py-3 ${
-              canSave ? '' : 'opacity-40'
-            }`}
-          >
-            {saving ? (
-              <ActivityIndicator color="#ffffff" />
-            ) : (
-              <Text className="text-sm font-semibold text-white">Save</Text>
-            )}
-          </Pressable>
-        </View>
+            <View className="flex-row items-center gap-3 border-t border-zinc-900 bg-zinc-950 px-4 py-3">
+              <Pressable
+                onPress={handleParse}
+                disabled={!canParse}
+                className={`flex-1 items-center rounded-lg border border-zinc-700 px-4 py-3 ${
+                  canParse ? '' : 'opacity-40'
+                }`}
+              >
+                {isParsing ? (
+                  <ActivityIndicator color="#ffffff" />
+                ) : (
+                  <Text className="text-sm font-medium text-white">Parse with AI</Text>
+                )}
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  void handleSave();
+                }}
+                disabled={!canSave}
+                className={`flex-1 items-center rounded-lg bg-blue-500 px-4 py-3 ${
+                  canSave ? '' : 'opacity-40'
+                }`}
+              >
+                {saving ? (
+                  <ActivityIndicator color="#ffffff" />
+                ) : (
+                  <Text className="text-sm font-semibold text-white">Save</Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

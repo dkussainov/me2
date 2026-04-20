@@ -1,7 +1,19 @@
 import * as SecureStore from 'expo-secure-store';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000';
 const TOKEN_KEY = 'me2.session.token';
+const FALLBACK_API_URL = 'http://192.168.72.126:3000';
+
+export function isDev(): boolean {
+  return typeof __DEV__ !== 'undefined' && __DEV__ === true;
+}
+
+function resolveApiUrl(): string {
+  const configured = process.env.EXPO_PUBLIC_API_URL?.trim();
+  if (configured && configured.length > 0) return configured.replace(/\/+$/, '');
+  return FALLBACK_API_URL;
+}
+
+export const API_URL: string = resolveApiUrl();
 
 export async function getAuthToken(): Promise<string | null> {
   return SecureStore.getItemAsync(TOKEN_KEY);
