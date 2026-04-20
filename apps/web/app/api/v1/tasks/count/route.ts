@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import { and, count, eq, isNull } from 'drizzle-orm';
 import { tasks } from '@me2/db';
-import { auth } from '@/lib/auth';
 import { getDb } from '@/lib/db';
+import { getUserId } from '@/lib/requireUser';
 
 export const runtime = 'nodejs';
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await getUserId();
+  if (!userId) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
@@ -19,7 +19,7 @@ export async function GET() {
       .from(tasks)
       .where(
         and(
-          eq(tasks.userId, session.user.id),
+          eq(tasks.userId, userId),
           eq(tasks.status, 'open'),
           isNull(tasks.deletedAt)
         )

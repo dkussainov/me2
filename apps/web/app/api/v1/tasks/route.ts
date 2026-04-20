@@ -7,8 +7,8 @@ import {
   TaskStatusSchema,
   type Task,
 } from '@me2/types';
-import { auth } from '@/lib/auth';
 import { getDb } from '@/lib/db';
+import { getUserId } from '@/lib/requireUser';
 
 export const runtime = 'nodejs';
 
@@ -42,8 +42,8 @@ function rowToTask(row: TaskRow): Task {
 }
 
 export async function GET(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await getUserId();
+  if (!userId) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
   const { limit, cursor, status } = parsed.data;
   const db = getDb();
 
-  const conditions = [eq(tasks.userId, session.user.id), isNull(tasks.deletedAt)];
+  const conditions = [eq(tasks.userId, userId), isNull(tasks.deletedAt)];
   if (status) conditions.push(eq(tasks.status, status));
   if (cursor) conditions.push(lt(tasks.updatedAt, new Date(cursor)));
 
@@ -80,8 +80,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await getUserId();
+  if (!userId) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
   const input = parsed.data;
   const row: NewTaskRow = {
     id: input.id,
-    userId: session.user.id,
+    userId,
     title: input.title,
     notes: input.notes ?? null,
     status: input.status,
