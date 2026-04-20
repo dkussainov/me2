@@ -13,6 +13,7 @@
     "src"
   ],
   "scripts": {
+    "build": "tsc -b",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "test": "vitest run"
