@@ -1,4 +1,7 @@
+import * as dotenv from 'dotenv';
 import type { Config } from 'drizzle-kit';
+
+dotenv.config({ path: '.env.local' });
 
 const connectionString = process.env.NEON_DATABASE_URL;
 

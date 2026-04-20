@@ -30,6 +30,7 @@
     "drizzle-orm": "^0.36.0"
   },
   "devDependencies": {
+    "dotenv": "^16.4.5",
     "drizzle-kit": "^0.28.0",
     "typescript": "^5.4.0",
     "vitest": "^2.0.0"
