@@ -1,0 +1,58 @@
+{
+  "name": "me2-tasks",
+  "displayName": "ME2 Tasks",
+  "description": "Send selected code to your ME2 inbox from VS Code, Cursor, or Windsurf.",
+  "version": "0.1.0",
+  "publisher": "me2",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onCommand:me2.sendToInbox",
+    "onCommand:me2.setApiToken",
+    "onCommand:me2.clearApiToken"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "me2.sendToInbox", "title": "ME2: Send to Inbox" },
+      { "command": "me2.setApiToken", "title": "ME2: Set API Token" },
+      { "command": "me2.clearApiToken", "title": "ME2: Clear API Token" }
+    ],
+    "keybindings": [
+      {
+        "command": "me2.sendToInbox",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "ME2",
+      "properties": {
+        "me2.apiUrl": {
+          "type": "string",
+          "default": "https://me2.vercel.app",
+          "description": "Base URL for the ME2 API. Uses https://me2.vercel.app by default."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "package": "vsce package --no-dependencies",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"no-op\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.4.0"
+  }
+}
